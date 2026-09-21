@@ -10,3 +10,4 @@ __pycache__/
 *.ed25519
 *.key
 secrets/
+.~lock.*#
