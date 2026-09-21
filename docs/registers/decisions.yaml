@@ -1,0 +1,19 @@
+# Decision register summary (plan §13.1). "default" is adopted at the due gate if undecided.
+M0A_blockers:
+  D1: {decision: Implementation language, due: G0, default: Python, status: open}
+  D7: {decision: Pinned runtime versions and model IDs per provider, due: G0, default: "exact pins in providers.yaml", status: open}
+  D3: {decision: M0 testnet environment, due: G0, default: "one project-operated Agave testnet validator + separate ops host", status: open}
+  D5: {decision: Alert channel, due: G0, default: "dedicated channel on the operator's watchtower service", status: open}
+  D6: {decision: Thresholds/budgets/trial rules, due: G0, default: "docs/registers/parameters.yaml", status: open}
+  D11: {decision: OS sandbox backend, due: G0, default: bubblewrap, status: open}
+  D14: {decision: Bundle signing key custody, due: G0, default: "offline hardware token held by PO + sealed backup", status: open}
+  D15: {decision: Audit anchor service, due: G0, default: "retention-locked object storage, separate account; P-18/P-19", status: open}
+  D16: {decision: Capability transport, due: G0, default: "UDS + SO_PEERCRED on one ops host; mTLS to validator host", status: open}
+multi_provider:
+  D19: {decision: Provider scope/order, due: G0, default: "Claude reference on G1 path; others via PA", status: open}
+  D20: {decision: Runtime or native adapter per provider, due: "each provider W1", default: "runtime first, native on any PC failure", status: open}
+  D21: {decision: Data-handling approval per provider, due: "before provider W1", default: "no approval => unroutable (MB-5)", status: open}
+  D22: {decision: Cross-provider Judge, due: "after G2 of two configurations", default: "not used in M0", status: open}
+M0B_blocker:
+  D9: {decision: Consensus mode on testnet + cluster-feature query, due: "before W15", default: "input unavailable => mode unknown", status: open}
+excluded_from_M0: [D2, D4, D8, D10, D12, D13, D17, D18]

@@ -1,0 +1,14 @@
+# Deployment facts (owner-set, reviewed, hashed). Values below are PLACEHOLDERS to be set at G0 (D3).
+client: agave                      # D2: Agave only in M0
+cluster: testnet                   # D3: one dedicated project-operated testnet validator
+validator_id: testnet-validator-1
+identity_pubkey: "REPLACE_AT_G0_IDENTITY_PUBKEY"
+expected_version: "0.0.0"          # REPLACE_AT_G0; FC-4 is injected by declaring a different value
+declared_consensus_mode: tower     # REPLACE_AT_G0 (D9); cross-checked against three observed inputs
+# Running-version support per mode (input 2 of §5.10). REPLACE_AT_G0 from the Agave release notes [U].
+mode_support:
+  tower: {min: "0.0.0", max: null}
+skills_inline: true                # §6.2 fallback adopted until W1 shows `skills` loads with setting_sources=[]
+telemetry:
+  observer_latency_ms_max: 5000    # owner-set (TH-1)
+  error_rate_max: 0.5

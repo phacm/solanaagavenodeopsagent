@@ -1,0 +1,51 @@
+configurations:
+  claude-ref:
+    provider: anthropic
+    adapter: claude_sdk
+    runtime:
+      name: claude-agent-sdk
+      version: 0.0.0-dev
+    model: claude-opus-5
+    admission: pending
+  anthropic-native:
+    provider: anthropic
+    adapter: native
+    runtime:
+      name: anthropic
+      version: 0.0.0-dev
+    model: claude-opus-5
+    admission: pending
+  openai-codex:
+    provider: openai
+    adapter: codex_cli
+    runtime:
+      name: codex
+      version: REPLACE_AT_W1-O
+    model: REPLACE_AT_W1-O
+    admission: pending
+  openai-native:
+    provider: openai
+    adapter: native
+    runtime:
+      name: openai
+      version: REPLACE_AT_W1-O
+    model: REPLACE_AT_W1-O
+    admission: pending
+  google-native:
+    provider: google
+    adapter: native
+    runtime:
+      name: google-genai
+      version: REPLACE_AT_W1-G
+    model: REPLACE_AT_W1-G
+    admission: pending
+roles:
+  diagnostician: claude-ref
+  change_planner: claude-ref
+  proposal_judge: claude-ref
+  reporter: claude-ref
+endpoints:
+  anthropic: https://api.anthropic.com
+  openai: https://api.openai.com
+  google: https://generativelanguage.googleapis.com
+_development: 'DEVELOPMENT OVERLAY: runtime versions are placeholders; admission pending'

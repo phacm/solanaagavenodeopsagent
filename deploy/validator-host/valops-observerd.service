@@ -1,0 +1,49 @@
+# Observer daemon [9] on the validator host (HLD §5.11). Read-only; runs as `valops`, which
+# cannot read the validator's keypairs (OD-6). Limits: P-13 (plan §13.2) - regenerate from
+# the register on every change (W2 finalises exact directives).
+[Unit]
+Description=valops observer daemon (read-only, M0)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=valops
+Group=valops
+ExecStart=/opt/valops/venv/bin/valops observerd --config /etc/valops/observerd.yaml
+Restart=on-failure
+RestartSec=5
+
+# --- SR-17 / OD-8 resource containment (P-13) ---
+Slice=valops.slice
+CPUQuota=20%
+MemoryMax=256M
+TasksMax=32
+LimitNOFILE=256
+IOWeight=10
+Nice=10
+
+# --- hardening intent (HLD §5.11) ---
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallFilter=@system-service
+SystemCallArchitectures=native
+# ledger and logs are readable, never writable; the bundle is mounted read-only
+ReadOnlyPaths=/mnt/ledger /mnt/accounts /home/sol/logs /opt/valops/bundle
+ReadWritePaths=/var/lib/valops-observer
+# keypairs: make sure the identity/vote keypair paths are not readable by `valops` at the OS level (OD-6)
+InaccessiblePaths=-/home/sol/validator-keypair.json -/home/sol/vote-account-keypair.json
+
+[Install]
+WantedBy=multi-user.target

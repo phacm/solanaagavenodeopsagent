@@ -1,0 +1,43 @@
+# Role -> configuration (provider, adapter, runtime pin, model) (plan §5.12.4, D7, D19, D20).
+# Default: ONE configuration serves all roles (D22 cross-provider judge not used in M0).
+# `admission` is the PA record: pending | admitted | native_only | not_admitted.
+configurations:
+  claude-ref:                       # reference configuration, the only one on the G1 path (D19)
+    provider: anthropic
+    adapter: claude_sdk
+    runtime: {name: claude-agent-sdk, version: "REPLACE_AT_G0"}
+    model: claude-opus-5            # D7 candidate; confirm current at G0
+    admission: pending
+  anthropic-native:
+    provider: anthropic
+    adapter: native
+    runtime: {name: anthropic, version: "REPLACE_AT_G0"}
+    model: claude-opus-5
+    admission: pending
+  openai-codex:
+    provider: openai
+    adapter: codex_cli
+    runtime: {name: codex, version: "REPLACE_AT_W1-O"}
+    model: REPLACE_AT_W1-O
+    admission: pending
+  openai-native:
+    provider: openai
+    adapter: native
+    runtime: {name: openai, version: "REPLACE_AT_W1-O"}
+    model: REPLACE_AT_W1-O
+    admission: pending
+  google-native:                    # expected outcome for Gemini: native-only [H]
+    provider: google
+    adapter: native
+    runtime: {name: google-genai, version: "REPLACE_AT_W1-G"}
+    model: REPLACE_AT_W1-G
+    admission: pending
+roles:
+  diagnostician: claude-ref
+  change_planner: claude-ref
+  proposal_judge: claude-ref
+  reporter: claude-ref
+endpoints:                          # the ONLY hosts the model broker forwards to
+  anthropic: https://api.anthropic.com
+  openai: https://api.openai.com
+  google: https://generativelanguage.googleapis.com

@@ -1,0 +1,74 @@
+# Skills library v1 (plan §5.8) with compatibility matrix. `modes: any` = not consensus-mode
+# specific. A mode-specific skill is refused by the store when the mode is `unknown`
+# (HLD §5.10) and must match the confirmed mode otherwise. Every factual step cites its source.
+skills:
+  restart-idle-window:
+    roles: [diagnostician, change_planner]
+    modes: any
+    client: agave
+    docs: "Anza S3 general best practices; S5 failover guide (accessed 2026-09-17; re-verify W13)"
+    preconditions:
+      - No own leader slot within the restart window (leader schedule filtered to own identity).
+      - Routine restart does not fetch a snapshot (--no-snapshot-fetch).
+      - The operator performs the restart; the system executes nothing.
+  upgrade-agave:
+    roles: [diagnostician, change_planner]
+    modes: any
+    client: agave
+    docs: "Anza S3 (install while running, restart in an idle window, verify version)"
+    preconditions:
+      - Target version installed while the validator keeps running.
+      - No own leader slot within the restart window.
+      - Post-restart version verified from the `Starting validator with` log line.
+  catchup-diagnosis:
+    roles: [diagnostician, change_planner]
+    modes: any
+    client: agave
+    docs: "Anza S3 (snapshot policy, catch-up); S5 (solana catchup --our-localhost)"
+    preconditions:
+      - Catch-up distance and trend observed over at least two samples.
+      - No snapshot download proposed (T3; never in M0).
+  identity-balance:
+    roles: [diagnostician, change_planner]
+    modes: any
+    client: agave
+    docs: "Anza S3 (monitor identity balance)"
+    preconditions:
+      - Balance observed below the floor (P-02) from identity_balance.
+      - Funding is done by the operator from a wallet that is NOT on the validator host.
+  disk-headroom:
+    roles: [diagnostician, change_planner]
+    modes: any
+    client: agave
+    docs: "project runbook [A]; ledger/accounts volume layout from deployment facts"
+    preconditions:
+      - Free space below the floor (P-04) observed on the named volume.
+      - No deletion inside the ledger or accounts directories while the validator runs.
+  telemetry-health:
+    roles: [diagnostician, change_planner]
+    modes: any
+    client: agave
+    docs: "HLD §5.9, RB-5, RB-6"
+    preconditions:
+      - Watchtower consulted as the independent signal.
+      - The validator is NOT restarted because telemetry was lost.
+  failover-runbook-draft:
+    roles: [change_planner]
+    modes: [tower, alpenglow]
+    client: agave
+    docs: "Anza S5 (Tower BFT and Alpenglow sections)"
+    preconditions:
+      - Consensus mode confirmed (not `unknown`).
+      - Text only; the operator executes any failover by hand.
+  host-hygiene-report:
+    roles: [diagnostician, reporter]
+    modes: any
+    client: agave
+    docs: "Anza S4 security best practices"
+    preconditions: [Report-only; no remediation is proposed by the system.]
+  judge-checklist:
+    roles: [proposal_judge]
+    modes: any
+    client: agave
+    docs: "plan §5.5"
+    preconditions: []

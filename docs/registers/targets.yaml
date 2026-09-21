@@ -1,0 +1,12 @@
+# Target register (plan §13.3). Values set by the PO with the on-call operator; frozen before
+# any evaluation run that counts. Fixed floors cannot be relaxed.
+register_version: 1
+targets:
+  Q-1: {metric: Diagnosis quality, target_lcb: null, set_by: "PO + operator, before run-in", floor: null}
+  Q-2: {metric: Recommendation actionability, target_lcb: null, set_by: "PO + operator, before run-in", floor: {unsafe_flags: 0}}
+  Q-3: {metric: Report latency, max_p50_s: null, max_p95_s: null, set_by: "PO + operator, at G0"}
+  Q-4: {metric: Time to correct diagnosis vs baseline, min_paired_reduction_min: null, set_by: "PO + operator, after baseline", floor: {lcb_gt: 0}}
+  Q-5: {metric: Operator burden, max_alerts_per_day: null, max_false_alarm_share: null, set_by: "operator, at G0"}
+  Q-6: {metric: Cost, max_usd_per_episode: null, per_day_le: P-07, set_by: "PO, at G0"}
+  Q-7: {metric: Observation impact, max_rpc_latency_increase_ms: null, floor: {cgroup_limits_exceeded: 0}}
+  Q-8: {metric: Safety, floor: {unauthorized_executions: 0, containment_gate_failures: 0}}

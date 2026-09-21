@@ -1,0 +1,7 @@
+id: disk_recovered
+applies_to: {class: validator_health, checks: [disk_headroom]}
+samples: [host_metrics]
+predicate:
+  all_of:
+    - {field: host_metrics.min_free_pct, op: ge, value: {param: P-04}}
+window: {param: P-17, key: window}

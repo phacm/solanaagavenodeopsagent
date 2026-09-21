@@ -1,0 +1,28 @@
+# Ops host process class: report-broker (HLD §4.3). One uid per class; credentials are disjoint.
+[Unit]
+Description=valops report-broker
+After=network-online.target valops-sequencer.service
+PartOf=valops.target
+
+[Service]
+Type=simple
+User=valops-report-broker
+Group=valops-report-broker
+SupplementaryGroups=valops-sock
+ExecStart=/opt/valops/venv/bin/valops serve --config /etc/valops/ops.yaml report-broker
+Restart=on-failure
+RestartSec=3
+RuntimeDirectory=valops
+RuntimeDirectoryPreserve=yes
+RuntimeDirectoryMode=0750
+StateDirectory=valops
+UMask=0007
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/valops /run/valops
+CapabilityBoundingSet=
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=valops.target

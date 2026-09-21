@@ -1,0 +1,6 @@
+# P-31: provider price table used by the model broker for USD limits. Set from each
+# provider's published price list AT PIN TIME [U]; the builder refuses non-numeric values.
+anthropic:
+  claude-opus-5: {input_per_mtok: REPLACE_AT_PIN, output_per_mtok: REPLACE_AT_PIN}
+openai: {}
+google: {}

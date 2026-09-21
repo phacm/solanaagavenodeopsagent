@@ -1,0 +1,11 @@
+# FC-4 recovery: the running version equals deployment.yaml `expected_version`. The verifier
+# derives `version_matches_expected` deterministically from the bound bundle's deployment facts.
+id: version_matches_expected
+applies_to: {class: validator_health, checks: [version_drift]}
+samples: [running_version, catchup]
+predicate:
+  all_of:
+    - {field: running_version.parsed, op: eq, value: true}
+    - {field: running_version.version_matches_expected, op: eq, value: true}
+    - {field: catchup.slots_behind, op: le, value: {param: P-03, key: threshold}}
+window: {param: P-17, key: window}

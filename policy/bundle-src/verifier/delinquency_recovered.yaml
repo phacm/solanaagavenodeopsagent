@@ -1,0 +1,9 @@
+id: delinquency_recovered
+applies_to: {class: validator_health, checks: [delinquency, unit_state]}
+samples: [catchup, host_metrics]
+predicate:
+  all_of:
+    - {field: host_metrics.unit_active, op: eq, value: true}
+    - {field: catchup.parsed, op: eq, value: true}
+    - {field: catchup.slots_behind, op: le, value: {param: P-03, key: threshold}}
+window: {param: P-17, key: window}

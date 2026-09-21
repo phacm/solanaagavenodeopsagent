@@ -1,0 +1,4 @@
+[Unit]
+Description=valops M0 ops host (read-only incident-analysis assistant)
+[Install]
+WantedBy=multi-user.target

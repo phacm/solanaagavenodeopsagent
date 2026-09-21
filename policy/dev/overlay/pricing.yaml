@@ -1,0 +1,7 @@
+# DEVELOPMENT OVERLAY - not approved at G0 (P-31 is set at pin time from the provider's
+# published price list). Values: Anthropic list price for claude-opus-5 as cached 2026-06-24;
+# re-verify before any use that counts.
+anthropic:
+  claude-opus-5: {input_per_mtok: 5.0, output_per_mtok: 25.0}
+openai: {}
+google: {}

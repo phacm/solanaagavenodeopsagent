@@ -1,0 +1,8 @@
+id: balance_recovered
+applies_to: {class: validator_health, checks: [balance]}
+samples: [identity_balance]
+predicate:
+  all_of:
+    - {field: identity_balance.parsed, op: eq, value: true}
+    - {field: identity_balance.balance_sol, op: ge, value: {param: P-02}}
+window: {param: P-17, key: window}

@@ -1,0 +1,6 @@
+# D21 data-handling approvals (plan §13.1, §17.2). Held by the model broker, outside every
+# bundle. A provider without `approved: true` AND a record reference is unroutable (MB-5).
+providers:
+  anthropic: {approved: false, record: null, approved_by: null, date: null}
+  openai:    {approved: false, record: null, approved_by: null, date: null}
+  google:    {approved: false, record: null, approved_by: null, date: null}

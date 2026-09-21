@@ -1,0 +1,296 @@
+register_version: dev-1
+parameters:
+  P-01:
+    name: Sentinel check interval
+    unit: s
+    owner: PO
+    value: 60
+    bounds:
+      min: 30
+      max: 600
+  P-02:
+    name: Identity balance floor
+    unit: SOL
+    owner: on-call operator
+    value: 1.0
+    bounds:
+      min: 1.0e-06
+  P-03:
+    name: Catch-up alert threshold; consecutive samples
+    unit: slots; samples
+    owner: on-call operator
+    value:
+      threshold: 150
+      samples: 2
+    bounds:
+      threshold:
+        min: 1
+      samples:
+        min: 1
+        max: 10
+  P-04:
+    name: Disk headroom floor
+    unit: '% free'
+    owner: on-call operator
+    value: 15
+    bounds:
+      min: 5
+      max: 50
+  P-05:
+    name: max_turns per role
+    unit: turns
+    owner: SDK DRI
+    value:
+      diagnostician: 20
+      change_planner: 15
+      proposal_judge: 15
+      reporter: 10
+    bounds:
+      min: 1
+      max: 50
+  P-06:
+    name: max_budget_usd per session per role
+    unit: USD
+    owner: PO
+    value:
+      diagnostician: 2.0
+      change_planner: 2.0
+      proposal_judge: 2.0
+      reporter: 2.0
+    bounds:
+      min: 1.0e-06
+  P-07:
+    name: Daily cost ceiling (Q-6)
+    unit: USD/day
+    owner: PO
+    value: 50.0
+    bounds:
+      min: 1.0e-06
+  P-08:
+    name: Step retry budget
+    unit: count
+    owner: Workflow DRI
+    value: 1
+    bounds:
+      min: 0
+      max: 3
+  P-09:
+    name: Judge FAIL retry budget N
+    unit: count
+    owner: Workflow DRI
+    value: 1
+    bounds:
+      min: 0
+      max: 2
+  P-10:
+    name: Capability token expiry
+    unit: s
+    owner: Security reviewer
+    value: 300
+    bounds:
+      min: 1
+      max: 900
+  P-11:
+    name: Step wall-clock timeout
+    unit: s
+    owner: Workflow DRI
+    value: 300
+    bounds:
+      min: 60
+      max: 900
+  P-12:
+    name: Bundle drain deadline
+    unit: h
+    owner: PO
+    value: 24
+    bounds:
+      min: 1
+      max: 72
+  P-13:
+    name: Observer daemon limits (applied by the systemd unit)
+    unit: '% CPU; MiB; count; count'
+    owner: Containment DRI
+    value:
+      cpu_quota_pct: 20
+      memory_max_mib: 256
+      tasks_max: 32
+      limit_nofile: 256
+    bounds:
+      cpu_quota_pct:
+        min: 1
+        max: 50
+      memory_max_mib:
+        min: 64
+        max: 1024
+      tasks_max:
+        min: 4
+        max: 256
+      limit_nofile:
+        min: 64
+        max: 4096
+  P-14:
+    name: Observer per-command rate cap; concurrency
+    unit: calls/min; count
+    owner: Containment DRI
+    value:
+      rate_per_min: 6
+      concurrency: 1
+    bounds:
+      rate_per_min:
+        min: 1
+        max: 60
+      concurrency:
+        eq: 1
+  P-15:
+    name: Telemetry staleness threshold
+    unit: x check interval
+    owner: on-call operator
+    value: 3
+    bounds:
+      min: 2
+      max: 10
+  P-16:
+    name: Local-RPC latency breaker threshold
+    unit: ms
+    owner: Containment DRI
+    value: 500
+    bounds:
+      min: 1
+  P-17:
+    name: Verifier stability window W; awaiting_operator escalation deadline
+    unit: samples; min
+    owner: on-call operator
+    value:
+      window: 5
+      deadline_min: 30
+    bounds:
+      window:
+        min: 3
+        max: 20
+      deadline_min:
+        min: 1
+  P-18:
+    name: Anchor interval
+    unit: min
+    owner: Security reviewer
+    value: 15
+    bounds:
+      min: 1
+      max: 60
+  P-19:
+    name: Maximum anchor lag before LLM steps stop
+    unit: min
+    owner: Security reviewer
+    value: 60
+    bounds:
+      min: 2
+  P-20:
+    name: Operator acknowledgement window (AW-3)
+    unit: min
+    owner: on-call operator
+    value: 15
+    bounds:
+      min: 5
+      max: 60
+  P-21:
+    name: Rubric completion deadline (AW-4)
+    unit: h
+    owner: PO
+    value: 24
+    bounds:
+      min: 4
+      max: 72
+  P-22:
+    name: Deterministic-gate trial count
+    unit: trials
+    owner: Security reviewer
+    value: 20
+    bounds:
+      min: 10
+  P-23:
+    name: Model-quality runs per fixture; confidence level
+    unit: runs; "%"
+    owner: PO
+    value:
+      runs: 5
+      confidence_pct: 95
+    bounds:
+      runs:
+        min: 3
+      confidence_pct:
+        min: 80
+        max: 99.9
+  P-24:
+    name: Injections per supported fault class
+    unit: count
+    owner: Fault injector
+    value: 10
+    bounds:
+      min: 5
+  P-25:
+    name: M0B run-in observation period
+    unit: days
+    owner: PO
+    value: 28
+    bounds:
+      min: 14
+  P-26:
+    name: RPO; RTO for store, chains and bundles
+    unit: min
+    owner: Containment DRI
+    value:
+      rpo_min: 15
+      rto_min: 240
+    bounds:
+      rpo_min:
+        min: 1
+      rto_min:
+        min: 1
+  P-27:
+    name: Retention periods
+    unit: per class
+    owner: PO
+    value: "plan \xA717.2"
+    not_bundled: true
+  P-28:
+    name: Kill-criteria tolerances
+    unit: per criterion
+    owner: PO
+    value: null
+    not_bundled: true
+  P-29:
+    name: Provider unavailability before pre-approved fallback
+    unit: min
+    owner: PO
+    value: 30
+    bounds:
+      min: 10
+      max: 240
+  P-30:
+    name: Model-broker per-session limits (requests = P-05)
+    unit: tokens
+    owner: Provider DRI
+    value:
+      input_tokens:
+        diagnostician: 400000
+        change_planner: 400000
+        proposal_judge: 400000
+        reporter: 400000
+      output_tokens:
+        diagnostician: 64000
+        change_planner: 64000
+        proposal_judge: 64000
+        reporter: 64000
+    bounds:
+      input_tokens:
+        min: 1
+      output_tokens:
+        min: 1
+  P-31:
+    name: Provider price table
+    unit: USD per token class
+    owner: PO
+    value: bundle pricing.yaml
+    not_bundled: true
+_note: DEVELOPMENT VALUES ONLY. Not approved at G0. Bundles built from this register
+  carry no gate weight.

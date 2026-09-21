@@ -1,0 +1,29 @@
+# Ops host process class: controller (HLD §4.3). One uid per class; credentials are disjoint.
+[Unit]
+Description=valops controller
+After=network-online.target valops-sequencer.service
+PartOf=valops.target
+
+[Service]
+Type=simple
+User=valops-controller
+Group=valops-controller
+SupplementaryGroups=valops-sock
+ExecStart=/opt/valops/venv/bin/valops serve --config /etc/valops/ops.yaml controller
+Restart=on-failure
+RestartSec=3
+RuntimeDirectory=valops
+RuntimeDirectoryPreserve=yes
+RuntimeDirectoryMode=0750
+StateDirectory=valops
+UMask=0007
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/valops /run/valops
+# Spawns sandboxed workers under the worker uid (setuid/setgid only; no other capability).
+AmbientCapabilities=CAP_SETUID CAP_SETGID
+CapabilityBoundingSet=CAP_SETUID CAP_SETGID
+
+[Install]
+WantedBy=valops.target

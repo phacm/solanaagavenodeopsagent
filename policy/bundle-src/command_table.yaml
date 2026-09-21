@@ -1,0 +1,60 @@
+# Observer command table (HLD §7.4). M0: read-only commands ONLY (OD-3, DD-5).
+# The loader refuses the whole table if any entry is not read_only, uses a non-allowlisted
+# executable/subcommand, a state-changing token, or a shell metacharacter.
+# Output formats are W2 verification items on the pinned Agave version [U].
+version: 1
+commands:
+  validator_monitor:
+    kind: exec
+    read_only: true
+    argv: ["agave-validator", "-l", "{ledger}", "monitor"]   # [E] S5; never exits -> bounded sample
+    parser: validator_monitor
+    timeout_s: 5
+    timeout_is_sample: true
+    output_cap_bytes: 8192
+  catchup:
+    kind: exec
+    read_only: true
+    argv: ["solana", "catchup", "--our-localhost", "8899"]   # [E] S5
+    parser: catchup
+    timeout_s: 30
+    rpc_backed: true
+  leader_schedule_self:
+    kind: exec
+    read_only: true
+    argv: ["solana", "leader-schedule", "--url", "{rpc_url}"]  # [E] S3, filtered to own identity by the parser
+    optional_argv: {epoch: ["--epoch", "{epoch}"]}
+    args: {epoch: {type: int, min: 0, max: 100000}}
+    parser: leader_schedule_self
+    timeout_s: 30
+    output_cap_bytes: 1048576
+    rpc_backed: true
+  identity_balance:
+    kind: exec
+    read_only: true
+    argv: ["solana", "balance", "{identity_pubkey}", "--url", "{rpc_url}"]  # [E] S3; pubkey from daemon-local config
+    parser: balance
+    timeout_s: 15
+    rpc_backed: true
+  running_version:
+    kind: builtin          # equivalent of grep -B1 'Starting validator with' over a BOUNDED tail [E] S3
+    read_only: true
+  log_tail:
+    kind: builtin
+    read_only: true
+    args: {lines: {type: int, min: 1, max: 500, required: true}}
+  host_metrics:
+    kind: builtin
+    read_only: true
+  host_hygiene:
+    kind: builtin          # report-only (SR-7) [E] S4
+    read_only: true
+  consensus_state_files:
+    kind: builtin          # one of the three observed inputs to §5.10 [E] S5
+    read_only: true
+  cluster_feature_state:
+    kind: unavailable      # D9: exact query unverified -> `unavailable` -> mode `unknown`
+    read_only: true
+  rpc_latency:
+    kind: builtin          # OD-9 breaker input
+    read_only: true

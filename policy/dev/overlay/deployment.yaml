@@ -1,0 +1,14 @@
+# DEVELOPMENT OVERLAY (no gate weight)
+development: true
+client: agave
+cluster: testnet
+validator_id: dev-validator
+identity_pubkey: "11111111111111111111111111111111"
+expected_version: "2.2.0"
+declared_consensus_mode: tower
+mode_support:
+  tower: {min: "0.0.0", max: null}
+skills_inline: true
+telemetry:
+  observer_latency_ms_max: 5000
+  error_rate_max: 0.5

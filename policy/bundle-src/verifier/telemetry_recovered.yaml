@@ -1,0 +1,9 @@
+id: telemetry_recovered
+applies_to: {class: telemetry_health}
+samples: [telemetry]
+predicate:
+  all_of:
+    - {field: telemetry.probe_reachable, op: eq, value: true}
+    - {field: telemetry.consecutive_unreachable, op: eq, value: 0}
+    - {field: telemetry.breaker_open, op: eq, value: false}
+window: {param: P-17, key: window}

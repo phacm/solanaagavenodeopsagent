@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "valops-agent"
+version = "0.5.0.dev0"
+description = "Solana Agave validator ops agent - M0: read-only incident-analysis assistant (HLD v0.5)"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+authors = [{ name = "Peng Huang", email = "peng.huang@acm.org" }]
+# D1 default: Python. Exact pins are a D7 deliverable (lockfile), recorded per configuration
+# in providers.yaml. Ranges below are placeholders until G0.
+dependencies = [
+  "pyyaml>=6.0",
+  "cryptography>=42",
+]
+
+[project.optional-dependencies]
+# Reference adapter (§6.1). Pin exactly at G0 (D7); W1 re-runs on any re-pin.
+claude = ["claude-agent-sdk"]
+# D15 default anchor store (retention-locked object storage).
+s3 = ["boto3"]
+dev = ["pytest>=8"]
+
+[project.scripts]
+valops = "valops.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["valops*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "real_boundary: needs real uids / sandbox backend / anchor store / pinned runtime; the only runs that carry G1 weight (HLD §10.1)",
+  "sandbox: uses the local bubblewrap backend",
+]

@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+/var/
+/build/
+/dist/
+*.egg-info/
+# never commit keys or provider secrets
+*.ed25519
+*.key
+secrets/

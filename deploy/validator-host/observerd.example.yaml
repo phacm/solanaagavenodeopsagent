@@ -1,0 +1,20 @@
+# Validator-host observer daemon configuration.
+listen: {host: 0.0.0.0, port: 8443}
+tls:                                   # mTLS: only the observer broker's client cert is accepted
+  cert: /etc/valops/tls/observerd.crt
+  key: /etc/valops/tls/observerd.key
+  client_ca: /etc/valops/tls/ops-ca.crt
+  expected_client_cn: observer-broker
+command_table: /opt/valops/bundle/command_table.yaml    # from the active signed bundle (OD-1)
+rate_per_min: 6                        # P-14
+breaker_threshold_ms: 500              # P-16 (2 x healthy p99 from the baseline campaign)
+local:                                 # daemon-local facts used to fill argv placeholders (OD-2)
+  ledger: /mnt/ledger
+  accounts_path: /mnt/accounts
+  logfile: /home/sol/logs/agave-validator.log
+  identity_pubkey: REPLACE_AT_G0
+  rpc_url: http://127.0.0.1:8899
+  unit_name: sol.service
+chain:                                 # OD-10 local chain; checkpoints are pulled by the observer broker
+  path: /var/lib/valops-observer/chain.jsonl
+  key: /etc/valops/keys/daemon.pem

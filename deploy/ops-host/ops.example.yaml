@@ -1,0 +1,60 @@
+# Ops-host configuration (every process class reads it; each uses only its own section).
+development: false
+runtime_dir: /run/valops
+state_dir: /var/lib/valops
+bundles_dir: /var/lib/valops/bundles
+uids:                     # SO_PEERCRED allowlists per process class (HLD §4.3, D16)
+  controller: [991]
+  worker: [992]
+  verifier: [993]
+  episode_broker: [994]
+  observer_broker: [995]
+  report_broker: [996]
+  model_broker: [997]
+  audit_sequencer: [998]
+  store: [999]
+  operator: [1000]        # the on-call operator's login uid (alerts / ack)
+keys:
+  token_private: /etc/valops/keys/token.pem           # controller only (0400 valops-controller)
+  token_public: /etc/valops/keys/token.pub.pem
+  chain_private: /etc/valops/keys/chain.pem           # sequencer only
+  chain_public: /etc/valops/keys/chain.pub.pem
+  chain_key_id: chain-1
+  daemon_public: /etc/valops/keys/daemon.pub.pem
+  bundle_trusted:                                     # D14: public keys pinned here; private key offline
+    - {key_id: bundle-key-1, public: /etc/valops/keys/bundle-1.pub.pem, status: active}
+anchor_interval_min: 15                               # P-18
+anchor:                                               # D15
+  kind: s3
+  bucket: REPLACE_valops-anchors
+  prefix: testnet-validator-1
+  retention_days: 400
+  region: REPLACE
+observer:
+  url: https://validator-host:8443
+  client_cert: /etc/valops/tls/observer-broker.crt    # observer broker only
+  client_key: /etc/valops/tls/observer-broker.key
+  ca: /etc/valops/tls/validator-ca.crt
+alerts:                                               # D5; report broker only
+  kind: webhook
+  style: slack
+  url_files: {primary: /etc/valops/secrets/alert-primary.url, backup: /etc/valops/secrets/alert-backup.url}
+ack_window_min: 15                                    # P-20
+model_broker:                                         # model broker only (SR-8)
+  keys:
+    anthropic: /etc/valops/secrets/anthropic.key
+    # openai: /etc/valops/secrets/openai.key
+    # google: /etc/valops/secrets/google.key
+  approvals_file: /etc/valops/d21-approvals.yaml      # MB-5: broker-side, not in any bundle
+sandbox:                                              # D11: bubblewrap; one minimal rootfs per runtime
+  rootfs:
+    claude_sdk: /opt/valops/rootfs/claude_sdk
+    native: /opt/valops/rootfs/native
+  worker_uid: 992
+  worker_gid: 992
+  python_path: /opt/valops
+  scratch_mb: {}                                      # only if W1 shows a runtime needs a writable path
+watchtower_heartbeat: /var/lib/valops/watchtower.heartbeat
+controller_interval_s: 5
+verifier_interval_s: 15
+checkpoint_interval_s: 60

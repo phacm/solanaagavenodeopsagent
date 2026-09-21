@@ -1,0 +1,12 @@
+# Supported fault classes (plan §2.6), frozen at G0. Anything else is "outside supported classes".
+by_check:
+  unit_state: FC-1
+  delinquency: FC-1
+  balance: FC-2
+  disk_headroom: FC-3
+  version_drift: FC-4
+  observer_unreachable: FC-5
+  observer_slow: FC-5
+  sample_stale: FC-5
+  command_errors: FC-5
+  rpc_breaker_open: FC-5

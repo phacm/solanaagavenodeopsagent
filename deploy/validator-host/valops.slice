@@ -1,0 +1,5 @@
+[Unit]
+Description=valops observer slice (SR-17)
+[Slice]
+CPUQuota=20%
+MemoryMax=256M
